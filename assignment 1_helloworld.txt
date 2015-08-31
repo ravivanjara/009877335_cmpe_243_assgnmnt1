@@ -1,0 +1,50 @@
+
+/*** main.cpp jst to print HELLO WORLD and run terminal task **/
+
+#include "stdio.h"
+#include "lpc_sys.h"
+#include "io.hpp"
+#include "utilities.h"
+#include "tasks.hpp"
+#include "examples/examples.hpp"
+
+int main(void)
+{
+    printf(" Hello Word \n CMPE 243:Assignment 1\n");
+	scheduler_add_task(new terminalTask(PRIORITY_HIGH));
+	scheduler_start();
+    return -1;
+}
+
+
+
+
+
+
+
+/*** Command Handler declaration in handlers.hpp***/
+CMD_HANDLER_FUNC(senseHandler);
+
+
+/**** Terminal command to be added in terminal.cpp ****/
+ cp.addHandler(senseHandler ,"SENSOR", "start temp or light sensor");
+
+ 
+/*** command handler function to be added in handlers.cpp***/
+CMD_HANDLER_FUNC(senseHandler)
+{
+    int l_val = LS.getRawValue();
+    int temp_f = TS.getFarenheit();
+        if(l_val<=100 || temp_f<=77)
+            {
+                LE.on(1);
+                delay_ms(1000);
+            }
+            else
+            {
+                LE.off(1);
+                delay_ms(500);
+            }
+
+            return true;
+}
